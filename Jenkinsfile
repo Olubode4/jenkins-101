@@ -16,7 +16,7 @@ pipeline {
                     cd myapp
 
                     # create and use local venv (NO apt here)
-                    python3 -m venv .venv
+                    /usr/bin/python3 -m venv .venv
                     . .venv/bin/activate
                     pip install --upgrade pip
                     pip install -r requirements.txt
