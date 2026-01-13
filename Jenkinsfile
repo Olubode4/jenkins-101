@@ -1,9 +1,8 @@
 pipeline {
     agent {
-        docker {
-            image 'myuser/myapp-python:1.0'   // <-- the image you built
-            // reuseNode true  // you can add this if you want to reuse the same workspace
-        }
+        node {
+            label 'docker-agent-python-2'
+            }
     }
 
     triggers {
