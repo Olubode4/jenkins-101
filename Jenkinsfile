@@ -12,11 +12,14 @@ pipeline {
             steps {
                 echo "Building.."
                 sh '''
-                apt install python3.11-venv
-                python3 -m venv .venv
-                . .venv/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                    set -e
+                    cd myapp
+
+                    # create and use local venv (NO apt here)
+                    python3 -m venv .venv
+                    . .venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
                 '''
             }
         }
@@ -24,9 +27,11 @@ pipeline {
             steps {
                 echo "Testing.."
                 sh '''
-                cd myapp
-                python3 hello.py
-                python3 hello.py --name=Brad
+                    set -e
+                    cd myapp
+                    . .venv/bin/activate
+                    python3 hello.py
+                    python3 hello.py --name=Brad
                 '''
             }
         }
