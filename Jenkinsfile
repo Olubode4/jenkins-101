@@ -1,13 +1,13 @@
 pipeline {
     agent {
         node {
-            label 'docker-agent-python-2'
-            }
+            label 'docker-agent-python'   // <-- your CI image
+            // args '-u root'  // only if you ever need root inside the container
+        }
     }
 
     triggers {
-        // maybe slow this down too; every minute is pretty aggressive
-        pollSCM('H/5 * * * *')  // every 5 minutes, for example
+        pollSCM('H/5 * * * *')  // every 5 minutes is enough; '* * * * *' is heavy
     }
 
     stages {
@@ -18,10 +18,8 @@ pipeline {
                     set -e
                     cd myapp
 
-                    # NO venv creation, NO pip install here
-                    # deps already installed into /opt/venv and PATH points to it
-
-                    python -m compileall .
+                    # deps are already baked into the image
+                    pip install -r requirements.txt --break-system-packages
                 '''
             }
         }
@@ -33,8 +31,8 @@ pipeline {
                     set -e
                     cd myapp
 
-                    python hello.py
-                    python hello.py --name=Brad
+                    python3 hello.py
+                    python3 hello.py --name=Brad
                 '''
             }
         }
@@ -42,9 +40,7 @@ pipeline {
         stage('Deliver') {
             steps {
                 echo 'Deliver....'
-                sh '''
-                    echo "doing delivery stuff.."
-                '''
+                sh 'echo "doing delivery stuff.."'
             }
         }
     }
