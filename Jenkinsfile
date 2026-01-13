@@ -1,7 +1,7 @@
 pipeline {
     agent {
-        docker {
-            image 'python:3.11-slim'
+        node {
+            label 'docker-agent-python-2'
         }
     }
 

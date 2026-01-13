@@ -1,0 +1,22 @@
+# Lightweight Python base
+FROM python:3.11-slim
+
+# Install OS deps if you need any (optional)
+# RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy only requirements first, so this layer can cache
+COPY . .
+
+# Create a venv and install deps ONCE at image build time
+RUN python -m venv /opt/venv && \
+    . /opt/venv/bin/activate && \
+    pip install --upgrade pip && \
+    pip install --no-cache-dir -r myapp/requirements.txt
+
+# Make the venv the default Python
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Default workdir for Jenkins steps
+WORKDIR /app
